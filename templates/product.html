@@ -1,0 +1,174 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2 id="product-name">{{ product.name }}</h2>
+
+<!-- Main product image -->
+<img id="product-image"
+     src="{{ url_for('static', filename=product.image) }}"
+     alt="{{ product.name }}"
+     class="component-img-large">
+
+<!-- REMOVED: No description paragraph -->
+
+<h3 id="product-price">₱{{ product.price }}</h3>
+
+<hr>
+
+<!-- ================================
+     COMPLETE VARIANT BUTTONS (CLEAN - NO DESCRIPTIONS)
+================================ -->
+
+{% if product.category == "Resistor" %}
+<h3>Select Resistor Variant:</h3>
+<div class="variation-list">
+    <button class="variation-btn" data-image="10r.png" data-name="10Ω Resistor">10Ω</button>
+    <button class="variation-btn" data-image="100r.png" data-name="100Ω Resistor">100Ω</button>
+    <button class="variation-btn" data-image="220r.png" data-name="220Ω Resistor">220Ω</button>
+    <button class="variation-btn" data-image="330r.png" data-name="330Ω Resistor">330Ω</button>
+    <button class="variation-btn" data-image="1kr.png" data-name="1kΩ Resistor">1kΩ</button>
+</div>
+{% elif product.category == "Capacitor" %}
+<h3>Select Capacitor Variant:</h3>
+<div class="variation-list">
+    <button class="variation-btn" data-image="10c.png" data-name="10µF Capacitor">10µF</button>
+    <button class="variation-btn" data-image="22c.png" data-name="22µF Capacitor">22µF</button>
+    <button class="variation-btn" data-image="47c.png" data-name="47µF Capacitor">47µF</button>
+    <button class="variation-btn" data-image="100c.png" data-name="100µF Capacitor">100µF</button>
+    <button class="variation-btn" data-image="220c.png" data-name="220µF Capacitor">220µF</button>
+</div>
+{% elif product.category == "Diode" %}
+<h3>Select Diode Variant:</h3>
+<div class="variation-list">
+    <button class="variation-btn" data-image="4001d.png" data-name="1N4001 Diode">1N4001</button>
+    <button class="variation-btn" data-image="4007d.png" data-name="1N4007 Diode">1N4007</button>
+    <button class="variation-btn" data-image="4148d.png" data-name="1N4148 Diode">1N4148</button>
+    <button class="variation-btn" data-image="z5.1d.png" data-name="Zener 5.1V Diode">Zener 5.1V</button>
+    <button class="variation-btn" data-image="z12d.png" data-name="Zener 12V Diode">Zener 12V</button>
+</div>
+{% elif product.category == "Transistor" %}
+<h3>Select Transistor Variant:</h3>
+<div class="variation-list">
+    <button class="variation-btn" data-image="2n2t.png" data-name="2N2222 Transistor">2N2222</button>
+    <button class="variation-btn" data-image="bc547t.png" data-name="BC547 Transistor">BC547</button>
+    <button class="variation-btn" data-image="bc557t.png" data-name="BC557 Transistor">BC557</button>
+    <button class="variation-btn" data-image="t120t.png" data-name="TIP120 Transistor">TIP120</button>
+    <button class="variation-btn" data-image="t31t.png" data-name="TIP31 Transistor">TIP31</button>
+</div>
+{% elif product.category == "IC" %}
+<h3>Select IC Variant:</h3>
+<div class="variation-list">
+    <button class="variation-btn" data-image="555t.ic.png" data-name="555 Timer IC">555 Timer</button>
+    <button class="variation-btn" data-image="lm358.ic.png" data-name="LM358 IC">LM358</button>
+    <button class="variation-btn" data-image="74H00.ic.png" data-name="74HC00 IC">74HC00</button>
+    <button class="variation-btn" data-image="4017.ic.png" data-name="4017 IC">4017</button>
+    <button class="variation-btn" data-image="cd4040.ic.png" data-name="CD4040 IC">CD4040</button>
+</div>
+{% elif product.category == "Power" %}
+<h3>Select Power Variant:</h3>
+<div class="variation-list">
+    <button class="variation-btn" data-image="9vb.png" data-name="9V Battery">9V Battery</button>
+    <button class="variation-btn" data-image="5vb.png" data-name="5V Power Supply">5V PSU</button>
+    <button class="variation-btn" data-image="12vb.png" data-name="12V Power Supply">12V PSU</button>
+    <button class="variation-btn" data-image="ionb.png" data-name="18650 Battery Cell">18650 Cell</button>
+    <button class="variation-btn" data-image="usbpm.png" data-name="USB Power Module">USB Module</button>
+</div>
+{% elif product.category == "Switch" %}
+<h3>Select Switch Variant:</h3>
+<div class="variation-list">
+    <button class="variation-btn" data-image="pb.png" data-name="Push Button Switch">Push Button</button>
+    <button class="variation-btn" data-image="ts.png" data-name="Toggle Switch">Toggle</button>
+    <button class="variation-btn" data-image="ss.png" data-name="Slide Switch">Slide</button>
+    <button class="variation-btn" data-image="dips.png" data-name="DIP Switch">DIP</button>
+    <button class="variation-btn" data-image="rs.png" data-name="Rocker Switch">Rocker</button>
+</div>
+{% elif product.category == "LED" %}
+<h3>Select LED Variant:</h3>
+<div class="variation-list">
+    <button class="variation-btn" data-image="rled.png" data-name="Red LED">Red</button>
+    <button class="variation-btn" data-image="gled.png" data-name="Green LED">Green</button>
+    <button class="variation-btn" data-image="bled.png" data-name="Blue LED">Blue</button>
+    <button class="variation-btn" data-image="wled.png" data-name="White LED">White</button>
+    <button class="variation-btn" data-image="rgbled.png" data-name="RGB LED">RGB</button>
+</div>
+{% elif product.category == "Connector" %}
+<h3>Select Connector Variant:</h3>
+<div class="variation-list">
+    <button class="variation-btn" data-image="j1.png" data-name="Jumper Wires">Jumper Wires</button>
+    <button class="variation-btn" data-image="fmaled.png" data-name="Female Dupont">Female Dupont</button>
+    <button class="variation-btn" data-image="maleheader.png" data-name="Male Header">Male Header</button>
+    <button class="variation-btn" data-image="fmaleheader.png" data-name="Female Header">Female Header</button>
+    <button class="variation-btn" data-image="tblock.png" data-name="Terminal Block">Terminal Block</button>
+</div>
+{% elif product.category == "Module" %}
+<h3>Select Module Variant:</h3>
+<div class="variation-list">
+    <button class="variation-btn" data-image="rmod.png" data-name="Relay Module">Relay Module</button>
+    <button class="variation-btn" data-image="l298dm.png" data-name="L298 Motor Driver">L298 Driver</button>
+    <button class="variation-btn" data-image="btoothm.png" data-name="Bluetooth Module">Bluetooth</button>
+    <button class="variation-btn" data-image="wifim.png" data-name="WiFi Module">WiFi Module</button>
+    <button class="variation-btn" data-image="usonicm.png" data-name="Ultrasonic Sensor">Ultrasonic</button>
+</div>
+{% elif product.category == "Microcontroller" %}
+<h3>Select Microcontroller Variant:</h3>
+<div class="variation-list">
+    <button class="variation-btn" data-image="auno.png" data-name="Arduino Uno">Arduino Uno</button>
+    <button class="variation-btn" data-image="anano.png" data-name="Arduino Nano">Arduino Nano</button>
+    <button class="variation-btn" data-image="esp8266.png" data-name="ESP8266">ESP8266</button>
+    <button class="variation-btn" data-image="esp32.png" data-name="ESP32">ESP32</button>
+    <button class="variation-btn" data-image="rberrypico.png" data-name="Raspberry Pi Pico">RPi Pico</button>
+</div>
+{% endif %}
+
+<hr>
+
+<!-- FIXED ADD TO CART FORM -->
+<form method="POST" action="{{ url_for('add_to_cart', product_id=product.id) }}">
+    <input type="hidden" id="selected_image" name="selected_image" value="{{ product.image }}">
+    <input type="hidden" id="selected_name" name="selected_name" value="{{ product.name }}">
+    <button type="submit" class="btn add-to-cart-btn">🛒 Add to Cart</button>
+</form>
+
+<a href="/" class="btn">🏠 Back to Shop</a>
+
+<!-- FIXED JAVASCRIPT - Updates NAME + IMAGE -->
+<script>
+function changeVariant(imageFile, variantName) {
+    const img = document.getElementById("product-image");
+    img.src = "{{ url_for('static', filename='') }}" + imageFile + "?t=" + new Date().getTime();
+
+    document.getElementById("product-name").textContent = variantName;
+
+    document.getElementById("selected_image").value = imageFile;
+    document.getElementById("selected_name").value = variantName;
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.variation-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const imageFile = this.getAttribute('data-image');
+            const variantName = this.getAttribute('data-name');
+            changeVariant(imageFile, variantName);
+            document.querySelectorAll('.variation-btn').forEach(btn => btn.style.background = 'linear-gradient(135deg, #ff69b4, #ff1493)');
+            this.style.background = 'linear-gradient(135deg, #28a745, #20c997)';
+        });
+    });
+});
+</script>
+
+<style>
+.component-img-large { width: 300px; height: 250px; object-fit: contain; margin: 20px auto; display: block; border-radius: 15px; box-shadow: 0 8px 25px rgba(255,105,180,0.3); }
+.variation-list { margin: 20px 0; text-align: center; }
+.variation-btn {
+    margin: 5px; padding: 12px 18px; background: linear-gradient(135deg, #ff69b4, #ff1493);
+    border-radius: 15px; color: white; border: none; font-weight: bold; cursor: pointer;
+    box-shadow: 0 4px 15px rgba(255,105,180,0.4); transition: all 0.3s ease; font-size: 0.95rem;
+}
+.variation-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(255,105,180,0.6); }
+.add-to-cart-btn {
+    background: linear-gradient(135deg, #28a745, #20c997) !important; width: 100%; padding: 18px;
+    font-size: 1.2rem; border-radius: 20px; box-shadow: 0 8px 25px rgba(40,167,69,0.4); margin: 20px 0;
+}
+</style>
+
+{% endblock %}

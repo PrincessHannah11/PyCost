@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% block content %}
+<div style="max-width: 1200px; margin: 0 auto;">
+    <h2 style="text-align: center; color: #ff3399; font-size: 2.8rem; margin-bottom: 40px; text-shadow: 2px 2px 6px #ffb6c1;">📋 My Orders</h2>
+
+    {% if orders %}
+    <table class="orders-table" style="width: 100%; border-collapse: collapse; background: linear-gradient(135deg, rgba(255,240,246,0.95), rgba(255,229,244,0.95)); border-radius: 25px; overflow: hidden; box-shadow: 0 20px 60px rgba(255,105,180,0.4); border: 3px solid #ff69b4;">
+        <!-- SUPER PINK HEADER -->
+        <tr style="background: linear-gradient(135deg, #ff69b4, #ff1493, #ff69b4); color: white; box-shadow: 0 4px 15px rgba(255,105,180,0.6);">
+            <th style="padding: 22px; text-align: left; font-weight: bold; font-size: 1.1rem; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">🆔 Order ID</th>
+            <th style="padding: 22px; text-align: left; font-weight: bold; font-size: 1.1rem; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">📦 Product</th>
+            <th style="padding: 22px; text-align: center; font-weight: bold; font-size: 1.1rem; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">🖼️ Image</th>
+            <th style="padding: 22px; text-align: center; font-weight: bold; font-size: 1.1rem; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">🔢 Quantity</th>
+            <th style="padding: 22px; text-align: right; font-weight: bold; font-size: 1.1rem; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">💰 Total</th>
+            <th style="padding: 22px; text-align: center; font-weight: bold; font-size: 1.1rem; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">📅 Ordered</th>
+            <th style="padding: 22px; text-align: center; font-weight: bold; font-size: 1.1rem; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">⚡ Action</th>
+        </tr>
+
+        {% for order in orders %}
+        <tr style="background: linear-gradient(135deg, rgba(255,248,250,0.8), rgba(255,240,246,0.9)); border-bottom: 2px solid #ffd6eb;">
+            <td style="padding: 25px; font-weight: bold; color: #ff3399; font-size: 1.1rem; background: rgba(255,105,180,0.1);">#{{ order.order_id }}</td>
+            <td style="padding: 25px; font-weight: 600; color: #ff1493; max-width: 220px;">{{ order.name }}</td>
+            <td style="padding: 25px; text-align: center;">
+                {% if order.image and order.image != "" %}
+                    <img src="{{ url_for('static', filename=order.image) }}" width="70" style="border-radius: 15px; box-shadow: 0 6px 20px rgba(255,105,180,0.4); border: 3px solid #ff69b4;">
+                {% else %}
+                    <div style="width: 70px; height: 70px; background: linear-gradient(135deg, #ffb6c1, #ff69b4); border-radius: 15px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 11px; box-shadow: 0 6px 20px rgba(255,105,180,0.4);">No Image</div>
+                {% endif %}
+            </td>
+            <td style="padding: 25px; text-align: center; font-weight: bold; color: #28a745; font-size: 1.3rem; background: rgba(40,167,69,0.1);">×{{ order.quantity }}</td>
+            <td style="padding: 25px; text-align: right; font-weight: bold; color: #ff69b4; font-size: 1.2rem; background: rgba(255,105,180,0.15);">₱{{ "%.2f"|format(order.price * order.quantity) }}</td>
+            <td style="padding: 25px; text-align: center; color: #ff69b4; font-size: 1rem; background: rgba(255,105,180,0.05); font-weight: 500;">
+                {% if order.order_time %}
+                    {{ order.order_time[:16] }}
+                {% else %}
+                    Just now ✨
+                {% endif %}
+            </td>
+            <td style="padding: 25px; text-align: center;">
+                <!-- ✅ MODAL TRIGGER BUTTON -->
+                <a href="#" class="order-remove-trigger"
+                   data-order-id="{{ order.order_id }}"
+                   data-order-name="{{ order.name }}"
+                   style="background: linear-gradient(135deg, #ff1493, #dc3545); color: white; padding: 14px 24px; text-decoration: none; border-radius: 25px; font-weight: bold; display: inline-block; box-shadow: 0 8px 25px rgba(255,20,147,0.5); transition: all 0.3s ease; font-size: 1rem; border: 2px solid rgba(255,255,255,0.3);">
+                    <i style="margin-right: 6px;">🗑️</i>Remove
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <!-- SUPER PINK START SHOPPING BUTTON -->
+    <div style="text-align: center; margin: 50px 0;">
+        <a href="/" class="start-shopping-btn"
+           style="background: linear-gradient(135deg, #ff69b4, #ff1493, #ff69b4); color: white; padding: 22px 50px; font-size: 1.4rem; border-radius: 35px; text-decoration: none; font-weight: bold; box-shadow: 0 12px 40px rgba(255,105,180,0.6); display: inline-block; transition: all 0.3s ease; border: 3px solid rgba(255,255,255,0.4); text-shadow: 1px 1px 2px rgba(0,0,0,0.2);">
+            🛒 Start Shopping Again ✨
+        </a>
+    </div>
+
+    {% else %}
+    <!-- EMPTY ORDERS (SUPER PINK!) -->
+    <div style="text-align: center; padding: 100px 40px; background: linear-gradient(135deg, rgba(255,240,246,0.9), rgba(255,229,244,0.9)); border-radius: 30px; border: 4px dashed #ff69b4; margin: 60px 0; box-shadow: 0 20px 60px rgba(255,105,180,0.3);">
+        <div style="font-size: 5rem; margin-bottom: 25px; color: #ff69b4; text-shadow: 2px 2px 4px #ffb6c1;">📭</div>
+        <h3 style="color: #ff3399; font-size: 2.5rem; margin-bottom: 20px; font-weight: bold; text-shadow: 2px 2px 4px #ffb6c1;">No orders yet!</h3>
+        <p style="color: #ff69b4; font-size: 1.4rem; margin-bottom: 40px; font-weight: 500;">Start shopping to see your beautiful orders here 🛒✨</p>
+        <a href="/" class="start-shopping-btn"
+           style="background: linear-gradient(135deg, #ff69b4, #ff1493, #ff69b4); color: white; padding: 22px 50px; font-size: 1.4rem; border-radius: 35px; text-decoration: none; font-weight: bold; box-shadow: 0 12px 40px rgba(255,105,180,0.6); display: inline-block; transition: all 0.3s ease; border: 3px solid rgba(255,255,255,0.4); text-shadow: 1px 1px 2px rgba(0,0,0,0.2);">
+            🛒 Start Shopping ✨
+        </a>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+.orders-table {
+    background: linear-gradient(135deg, rgba(255,240,246,0.98), rgba(255,229,244,0.98)) !important;
+}
+
+.orders-table tr {
+    background: linear-gradient(135deg, rgba(255,248,250,0.9), rgba(255,240,246,0.95)) !important;
+    border-bottom: 3px solid #ffd6eb !important;
+}
+
+.orders-table tr:hover {
+    background: linear-gradient(135deg, rgba(255,105,180,0.12), rgba(255,182,193,0.15)) !important;
+    transform: scale(1.02) !important;
+    box-shadow: 0 8px 30px rgba(255,105,180,0.4) !important;
+}
+
+.order-remove-trigger:hover {
+    transform: translateY(-4px) !important;
+    box-shadow: 0 15px 40px rgba(255,20,147,0.7) !important;
+}
+
+.start-shopping-btn:hover {
+    transform: translateY(-4px) !important;
+    box-shadow: 0 18px 50px rgba(255,105,180,0.8) !important;
+}
+</style>
+
+{% endblock %}

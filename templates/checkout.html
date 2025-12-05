@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Checkout</h2>
+
+<p>Are you sure you want to place this order?</p>
+
+<form method="POST">
+    <button type="submit" class="btn btn-checkout">Confirm Order</button>
+</form>
+<a href="/cart" class="btn">Back to Cart</a>
+{% endblock %}

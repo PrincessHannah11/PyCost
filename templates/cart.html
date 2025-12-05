@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2 style="text-align: center; color: #ff3399; font-size: 2.5rem; margin-bottom: 30px; text-shadow: 2px 2px 4px #ffb6c1;">🛒 Your Cart</h2>
+
+{% if items %}
+<table class="cart-table" style="width: 100%; border-collapse: collapse; background: rgba(255,255,255,0.95); border-radius: 20px; overflow: hidden; box-shadow: 0 12px 40px rgba(255,105,180,0.3);">
+    <tr style="background: linear-gradient(135deg, #ff69b4, #ff1493); color: white;">
+        <th style="padding: 18px; text-align: left; font-weight: bold;">🖼️ Image</th>
+        <th style="padding: 18px; text-align: left; font-weight: bold;">📦 Name</th>
+        <th style="padding: 18px; text-align: center; font-weight: bold;">🔢 Qty</th>
+        <th style="padding: 18px; text-align: right; font-weight: bold;">💰 Price</th>
+        <th style="padding: 18px; text-align: right; font-weight: bold;">💵 Subtotal</th>
+        <th style="padding: 18px; text-align: center; font-weight: bold;">⚡ Action</th>
+    </tr>
+
+    {% for item in items %}
+    <tr style="border-bottom: 2px solid #ffd6eb; background: linear-gradient(135deg, rgba(255,248,250,0.8), rgba(255,240,246,0.9));">
+        <td style="padding: 20px;">
+            <img src="{{ url_for('static', filename=item.image) }}" width="70" style="border-radius: 15px; box-shadow: 0 6px 20px rgba(255,105,180,0.3); border: 2px solid #ff69b4;">
+        </td>
+        <td style="padding: 20px; font-weight: bold; color: #ff3399; font-size: 1.1rem;">{{ item.name }}</td>
+        <td style="padding: 20px; text-align: center;">
+            <a href="{{ url_for('decrease_quantity', cart_key=item.cart_key) }}" class="qty-btn" style="display: inline-block; width: 35px; height: 35px; line-height: 33px; background: linear-gradient(135deg, #ff69b4, #ff1493); color: white; text-decoration: none; border-radius: 50%; font-weight: bold; margin: 0 8px; box-shadow: 0 4px 12px rgba(255,105,180,0.4);">−</a>
+            <span style="font-weight: bold; font-size: 1.3rem; min-width: 25px; display: inline-block; color: #28a745;">{{ item.qty }}</span>
+            <a href="{{ url_for('increase_quantity', cart_key=item.cart_key) }}" class="qty-btn" style="display: inline-block; width: 35px; height: 35px; line-height: 33px; background: linear-gradient(135deg, #ff69b4, #ff1493); color: white; text-decoration: none; border-radius: 50%; font-weight: bold; margin: 0 8px; box-shadow: 0 4px 12px rgba(255,105,180,0.4);">+</a>
+        </td>
+        <td style="padding: 20px; text-align: right; font-weight: bold; color: #ff69b4; font-size: 1.1rem;">₱{{ "%.2f"|format(item.price) }}</td>
+        <td style="padding: 20px; text-align: right; font-weight: bold; color: #28a745; font-size: 1.2rem; background: rgba(40,167,69,0.1);">₱{{ "%.2f"|format(item.subtotal) }}</td>
+        <td style="padding: 20px; text-align: center;">
+            <!-- ✅ MODAL TRIGGER BUTTON -->
+            <a href="#" class="cart-remove-trigger"
+               data-cart-key="{{ item.cart_key }}"
+               data-item-name="{{ item.name }}"
+               style="background: linear-gradient(135deg, #ff1493, #dc3545); color: white; padding: 12px 20px; text-decoration: none; border-radius: 20px; font-weight: bold; display: inline-block; box-shadow: 0 6px 20px rgba(255,20,147,0.4); transition: all 0.3s ease; font-size: 0.95rem; border: 2px solid rgba(255,255,255,0.3);">
+                <i style="margin-right: 5px;">🗑️</i>Remove
+            </a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+<div style="text-align: center; margin: 40px 0;">
+    <h3 style="color: #ff3399; font-size: 2rem; margin-bottom: 25px; text-shadow: 2px 2px 4px #ffb6c1;">💎 Total: ₱{{ "%.2f"|format(total) }}</h3>
+    <a href="{{ url_for('checkout') }}" class="btn" style="background: linear-gradient(135deg, #28a745, #20c997); color: white; padding: 18px 40px; font-size: 1.3rem; border-radius: 30px; text-decoration: none; font-weight: bold; box-shadow: 0 10px 30px rgba(40,167,69,0.5); margin: 0 15px; display: inline-block;">🚀 Checkout Now</a>
+    <a href="{{ url_for('clear_cart') }}" class="btn" style="background: linear-gradient(135deg, #ff1493, #dc3545); color: white; padding: 18px 40px; font-size: 1.3rem; border-radius: 30px; text-decoration: none; font-weight: bold; box-shadow: 0 10px 30px rgba(255,20,147,0.5); margin: 0 15px; display: inline-block;" onclick="return confirm('🛒 Clear entire cart? This cannot be undone!')">🗑️ Clear All</a>
+</div>
+
+{% else %}
+<div style="text-align: center; padding: 80px 40px; background: linear-gradient(135deg, rgba(255,240,246,0.9), rgba(255,229,244,0.9)); border-radius: 30px; border: 4px dashed #ff69b4; margin: 40px 0; box-shadow: 0 20px 60px rgba(255,105,180,0.3);">
+    <div style="font-size: 5rem; margin-bottom: 25px; color: #ff69b4;">🛒</div>
+    <h3 style="color: #ff3399; font-size: 2.5rem; margin-bottom: 20px; font-weight: bold;">Your cart is empty!</h3>
+    <p style="color: #ff69b4; font-size: 1.4rem; margin-bottom: 40px;">Add some electronics to get started ✨</p>
+    <a href="/" class="btn" style="background: linear-gradient(135deg, #ff69b4, #ff1493); color: white; padding: 20px 45px; font-size: 1.4rem; border-radius: 35px; text-decoration: none; font-weight: bold; box-shadow: 0 12px 40px rgba(255,105,180,0.6); display: inline-block;">🏠 Start Shopping</a>
+</div>
+{% endif %}
+
+<style>
+.cart-table tr:hover {
+    background: linear-gradient(135deg, rgba(255,105,180,0.12), rgba(255,182,193,0.15)) !important;
+    transform: scale(1.01);
+    transition: all 0.3s ease;
+}
+
+.qty-btn:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 20px rgba(255,105,180,0.6) !important;
+}
+
+.cart-remove-trigger:hover {
+    transform: translateY(-3px) !important;
+    box-shadow: 0 10px 30px rgba(255,20,147,0.6) !important;
+}
+</style>
+
+{% endblock %}

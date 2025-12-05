@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Receipt PDF - Breadboard Shop</title>
+<style>
+    body, table, th, td, h1, h2, tfoot td {
+        font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+        margin: 0;
+        padding: 20px;
+        background-color: #fff0f6;
+        font-size: 12px;
+    }
+
+    .receipt-container {
+        width: 100%;
+        max-width: 700px;
+        margin: auto;
+        background-color: #fff;
+        padding: 25px;
+        border: 1px solid #ffd6eb;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .header-logo {
+        text-align: center;
+        margin-bottom: 15px;
+    }
+
+    .logo-img {
+        max-width: 150px;
+        max-height: 60px;
+        height: auto;
+        border-radius: 8px;
+    }
+
+    h1 {
+        text-align: center;
+        color: #ff66b2;
+        margin: 5px 0;
+        font-size: 24px;
+    }
+
+    h2 {
+        text-align: center;
+        color: #ff3399;
+        margin: 0 0 20px 0;
+        font-weight: normal;
+        font-size: 18px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+        table-layout: fixed;
+    }
+
+    th {
+        background-color: #ff66b2;
+        color: white;
+        padding: 12px 8px;
+        text-align: left;
+        font-size: 14px;
+    }
+
+    th:nth-child(1) { width: 50%; }
+    th:nth-child(2) { width: 10%; }
+    th:nth-child(3) { width: 20%; }
+    th:nth-child(4) { width: 20%; }
+
+    td {
+        border: 1px solid #ffd6eb;
+        padding: 10px 8px;
+        text-align: left;
+        vertical-align: middle;
+        font-size: 12px;
+    }
+
+    tfoot td {
+        font-weight: bold;
+        font-size: 16px;
+        border-top: 2px solid #ff66b2;
+        padding: 15px 8px;
+    }
+
+    .footer {
+        text-align: center;
+        margin-top: 20px;
+        font-style: italic;
+        color: #ff3399;
+        font-size: 12px;
+        border-top: 1px solid #ffd6eb;
+        padding-top: 15px;
+    }
+</style>
+</head>
+<body>
+<div class="receipt-container">
+    <!-- LOGO HEADER -->
+    <div class="header-logo">
+        <img src="file:///{{ static_base }}images/logo.png" class="logo-img" alt="Breadboard Shop" onerror="this.style.display='none'">
+    </div>
+
+    <h1>Thank You for Your Purchase!</h1>
+    {% if nickname %}
+        <h2>Customer: {{ nickname }}</h2>
+    {% else %}
+        <h2>Customer: {{ username }}</h2>
+    {% endif %}
+
+    <table>
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Qty</th>
+                <th>Price</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in orders %}
+            <tr>
+                <td>{{ item.name }}</td>
+                <td>{{ item.qty }}</td>
+                <td>₱{{ "%.2f"|format(item.price) }}</td>
+                <td>₱{{ "%.2f"|format(item.subtotal) }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="3" style="text-align:right;">Total:</td>
+                <td>₱{{ "%.2f"|format(total) }}</td>
+            </tr>
+        </tfoot>
+    </table>
+
+    <div class="footer">
+        Thank you for shopping with Breadboard Shop!
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}PyCost{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <!-- Bootstrap CSS for modals only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Logo Favicon -->
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='mihanna.png') }}">
+    <!-- Bootstrap Icons for cute icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+
+    <!-- 🎀 BUTTON FIXES - PyCost Style Restored -->
+    <style>
+    /* Fix ALL buttons to have cute PyCost boxes */
+    .btn, .nav-btn, .logout-btn, input[type="submit"], button[type="submit"], button {
+        background: linear-gradient(135deg, #ff69b4, #ff1493) !important;
+        color: white !important;
+        border: none !important;
+        padding: 12px 24px !important;
+        margin: 8px !important;
+        text-decoration: none !important;
+        border-radius: 25px !important;
+        font-weight: bold !important;
+        box-shadow: 0 6px 20px rgba(255,105,180,0.4) !important;
+        display: inline-block !important;
+        transition: all 0.3s ease !important;
+        font-size: 1rem !important;
+        min-height: 48px !important;
+        cursor: pointer !important;
+        text-align: center !important;
+    }
+
+    .btn:hover, .nav-btn:hover, input[type="submit"]:hover, button[type="submit"]:hover, button:hover {
+        transform: translateY(-2px) !important;
+        box-shadow: 0 8px 25px rgba(255,105,180,0.6) !important;
+        color: white !important;
+    }
+
+    /* Logout button special red */
+    .logout-btn {
+        background: linear-gradient(135deg, #ff1493, #dc3545) !important;
+        box-shadow: 0 6px 20px rgba(255,20,147,0.4) !important;
+    }
+
+    .logout-btn:hover {
+        box-shadow: 0 8px 25px rgba(220,53,69,0.6) !important;
+    }
+
+    /* Modal buttons */
+    .modal-footer .btn {
+        padding: 10px 20px !important;
+        margin: 0 5px !important;
+        font-size: 0.95rem !important;
+    }
+
+    /* Remove trigger buttons (red style) */
+    .cart-remove-trigger, .order-remove-trigger {
+        background: linear-gradient(135deg, #ff1493, #dc3545) !important;
+        box-shadow: 0 6px 20px rgba(255,20,147,0.4) !important;
+        padding: 10px 20px !important;
+        font-size: 0.95rem !important;
+    }
+
+    .cart-remove-trigger:hover, .order-remove-trigger:hover {
+        transform: translateY(-2px) !important;
+        box-shadow: 0 10px 30px rgba(255,20,147,0.6) !important;
+    }
+    </style>
+</head>
+<body style="background: linear-gradient(135deg, #fff0f6 0%, #ffe4ec 100%); min-height: 100vh;">
+
+<!-- 🔔 CUTE Flash Messages -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="alert alert-{{ 'success' if category == 'success' else 'info' if category == 'info' else 'danger' }} alert-dismissible fade show mx-auto mt-4 mb-3"
+           style="max-width: 1200px; border-radius: 20px; box-shadow: 0 8px 25px rgba(255,105,180,0.3); border: none;">
+        <i class="bi bi-check-circle-fill me-2" style="font-size: 1.2rem;"></i>{{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+<!-- 🎀 PINK Header -->
+<header style="background: linear-gradient(135deg, #ffb6c1, #ff69b4); padding: 25px 20px; text-align: center; box-shadow: 0 8px 25px rgba(255,182,193,0.4);">
+    <div style="display: flex; align-items: center; justify-content: center; gap: 25px; flex-wrap: wrap; max-width: 1200px; margin: 0 auto;">
+        <!-- Logo -->
+        <img src="{{ url_for('static', filename='mihanna.png') }}"
+             alt="PyCost Logo"
+             style="max-height: 70px; width: auto; border-radius: 15px; box-shadow: 0 4px 15px rgba(255,105,180,0.4);">
+        <!-- Site Title -->
+        <h1 style="color: white; font-size: 2.8rem; margin: 0; font-weight: bold; text-shadow: 2px 2px 4px #ff1493; font-family: 'Comic Sans MS', cursive;">
+            PyCost 💖
+        </h1>
+    </div>
+</header>
+
+<!-- 🌸 Navigation -->
+<nav style="text-align: center; margin: 25px auto; padding: 20px; background: linear-gradient(135deg, #ffe4ec, #fff0f6); border-radius: 25px; max-width: 1200px; margin: 25px auto; box-shadow: 0 8px 25px rgba(255,182,193,0.3);">
+    <a href="/" class="nav-btn" style="background: linear-gradient(135deg, #ff69b4, #ff1493); color: white; margin: 0 8px; padding: 15px 25px; text-decoration: none; border-radius: 30px; font-weight: bold; box-shadow: 0 6px 20px rgba(255,105,180,0.4); display: inline-block; transition: all 0.3s ease;">🏠 Home</a>
+    <a href="/cart" class="nav-btn" style="background: linear-gradient(135deg, #ff69b4, #ff1493); color: white; margin: 0 8px; padding: 15px 25px; text-decoration: none; border-radius: 30px; font-weight: bold; box-shadow: 0 6px 20px rgba(255,105,180,0.4); display: inline-block; transition: all 0.3s ease;">🛒 Cart</a>
+    {% if session.user %}
+        <a href="/orders" class="nav-btn" style="background: linear-gradient(135deg, #ff69b4, #ff1493); color: white; margin: 0 8px; padding: 15px 25px; text-decoration: none; border-radius: 30px; font-weight: bold; box-shadow: 0 6px 20px rgba(255,105,180,0.4); display: inline-block; transition: all 0.3s ease;">📋 My Orders</a>
+        <a href="#" class="nav-btn logout-btn" style="background: linear-gradient(135deg, #ff1493, #ff69b4); color: white; margin: 0 8px; padding: 15px 25px; text-decoration: none; border-radius: 30px; font-weight: bold; box-shadow: 0 6px 20px rgba(255,20,147,0.4); display: inline-block; transition: all 0.3s ease;" data-bs-toggle="modal" data-bs-target="#logoutModal">
+            🚪 Logout ({{ session.user }})
+        </a>
+    {% else %}
+        <a href="/login" class="nav-btn" style="background: linear-gradient(135deg, #ff69b4, #ff1493); color: white; margin: 0 8px; padding: 15px 25px; text-decoration: none; border-radius: 30px; font-weight: bold; box-shadow: 0 6px 20px rgba(255,105,180,0.4); display: inline-block; transition: all 0.3s ease;">🔐 Login</a>
+        <a href="/register" class="nav-btn" style="background: linear-gradient(135deg, #ff69b4, #ff1493); color: white; margin: 0 8px; padding: 15px 25px; text-decoration: none; border-radius: 30px; font-weight: bold; box-shadow: 0 6px 20px rgba(255,105,180,0.4); display: inline-block; transition: all 0.3s ease;">📝 Register</a>
+    {% endif %}
+</nav>
+
+<!-- 💕 Main Content -->
+<main class="container" style="background: rgba(255,255,255,0.9); padding: 30px; border-radius: 25px; margin: 30px auto; max-width: 1200px; box-shadow: 0 12px 40px rgba(255,105,180,0.25); backdrop-filter: blur(10px);">
+    {% block content %}{% endblock %}
+</main>
+
+<!-- 👢 Footer -->
+<footer style="background: linear-gradient(135deg, #ffb6c1, #ff69b4); color: white; text-align: center; padding: 25px; margin-top: 50px; font-size: 16px; box-shadow: 0 -8px 25px rgba(255,182,193,0.4);">
+    <div style="max-width: 1200px; margin: 0 auto;">
+        <p style="margin: 0 0 10px 0; font-weight: bold;">&copy; 2025 Breadboard Shop ✨ | Your source for electronic components</p>
+        <small style="opacity: 0.9;">PyCost Electronics Platform 💕</small>
+    </div>
+</footer>
+
+<!-- 🚪 CUTE Logout Modal -->
+<div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="border-radius: 25px; border: none; box-shadow: 0 20px 60px rgba(255,20,147,0.4);">
+      <div class="modal-header" style="background: linear-gradient(135deg, #ff69b4, #ff1493); color: white; border-radius: 25px 25px 0 0;">
+        <h5 class="modal-title" id="logoutModalLabel" style="font-weight: bold;">
+          <i class="bi bi-door-open-fill me-2"></i>Confirm Logout
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body text-center py-4" style="padding: 40px 20px;">
+        <i class="bi bi-heartbreak-fill text-danger" style="font-size: 4rem; margin-bottom: 20px;"></i>
+        <h4 class="mb-3">Are you sure, {{ session.user }}? 💔</h4>
+        <p class="text-muted fs-5">You'll need to login again to see your orders 🛒</p>
+      </div>
+      <div class="modal-footer justify-content-center pb-4" style="gap: 15px;">
+        <button type="button" class="btn btn-outline-secondary px-4 py-2" style="border-radius: 25px; font-weight: bold;" data-bs-dismiss="modal">
+          <i class="bi bi-x-circle me-1"></i>No, Stay! 💖
+        </button>
+        <a href="{{ url_for('logout') }}" class="btn btn-danger px-4 py-2" style="border-radius: 25px; font-weight: bold; box-shadow: 0 4px 15px rgba(220,53,69,0.4);">
+          <i class="bi bi-door-open me-1"></i>Yes, Bye! 👋
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 🗑️ CART REMOVE MODAL (Exact Logout Style!) -->
+<div class="modal fade" id="cartRemoveModal" tabindex="-1" aria-labelledby="cartRemoveModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="border-radius: 25px; border: none; box-shadow: 0 20px 60px rgba(255,20,147,0.4);">
+      <div class="modal-header" style="background: linear-gradient(135deg, #ff69b4, #ff1493); color: white; border-radius: 25px 25px 0 0;">
+        <h5 class="modal-title" id="cartRemoveModalLabel" style="font-weight: bold;">
+          <i class="bi bi-trash-fill me-2"></i>Confirm Remove Item
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body text-center py-4" style="padding: 40px 20px;">
+        <i class="bi bi-x-circle-fill text-danger" style="font-size: 4rem; margin-bottom: 20px;"></i>
+        <h4 class="mb-3" id="cartItemName">Remove this item?</h4>
+        <p class="text-muted fs-5" id="cartItemDetails">This action cannot be undone 🛒</p>
+      </div>
+      <div class="modal-footer justify-content-center pb-4" style="gap: 15px;">
+        <button type="button" class="btn btn-outline-secondary px-4 py-2" style="border-radius: 25px; font-weight: bold;" data-bs-dismiss="modal">
+          <i class="bi bi-x-circle me-1"></i>Cancel 💖
+        </button>
+        <a href="#" id="confirmCartRemove" class="btn btn-danger px-4 py-2" style="border-radius: 25px; font-weight: bold; box-shadow: 0 4px 15px rgba(220,53,69,0.4);">
+          <i class="bi bi-trash me-1"></i>Yes, Remove! 👋
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 🗑️ ORDER REMOVE MODAL (Exact Logout Style!) -->
+<div class="modal fade" id="orderRemoveModal" tabindex="-1" aria-labelledby="orderRemoveModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="border-radius: 25px; border: none; box-shadow: 0 20px 60px rgba(255,20,147,0.4);">
+      <div class="modal-header" style="background: linear-gradient(135deg, #ff69b4, #ff1493); color: white; border-radius: 25px 25px 0 0;">
+        <h5 class="modal-title" id="orderRemoveModalLabel" style="font-weight: bold;">
+          <i class="bi bi-trash-fill me-2"></i>Confirm Remove Order
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body text-center py-4" style="padding: 40px 20px;">
+        <i class="bi bi-x-circle-fill text-danger" style="font-size: 4rem; margin-bottom: 20px;"></i>
+        <h4 class="mb-3" id="orderItemName">Remove this order?</h4>
+        <p class="text-muted fs-5" id="orderItemDetails">Order #<span id="orderId"></span> - This cannot be undone 💔</p>
+      </div>
+      <div class="modal-footer justify-content-center pb-4" style="gap: 15px;">
+        <button type="button" class="btn btn-outline-secondary px-4 py-2" style="border-radius: 25px; font-weight: bold;" data-bs-dismiss="modal">
+          <i class="bi bi-x-circle me-1"></i>Keep Order 💖
+        </button>
+        <a href="#" id="confirmOrderRemove" class="btn btn-danger px-4 py-2" style="border-radius: 25px; font-weight: bold; box-shadow: 0 4px 15px rgba(220,53,69,0.4);">
+          <i class="bi bi-trash me-1"></i>Yes, Delete! 👋
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ✨ Bootstrap JS + REMOVE MODAL JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // 🛒 CART REMOVE MODAL
+    document.querySelectorAll('.cart-remove-trigger').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const cartKey = this.getAttribute('data-cart-key');
+            const itemName = this.getAttribute('data-item-name');
+            document.getElementById('cartItemName').textContent = itemName;
+            document.getElementById('cartItemDetails').textContent = `Remove "${itemName}" from cart?`;
+            document.getElementById('confirmCartRemove').href = '/cart/remove/' + cartKey;
+            new bootstrap.Modal(document.getElementById('cartRemoveModal')).show();
+        });
+    });
+
+    // 📋 ORDER REMOVE MODAL
+    document.querySelectorAll('.order-remove-trigger').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const orderId = this.getAttribute('data-order-id');
+            const orderName = this.getAttribute('data-order-name');
+            document.getElementById('orderItemName').textContent = `Remove "${orderName}"?`;
+            document.getElementById('orderId').textContent = orderId;
+            document.getElementById('confirmOrderRemove').href = '/orders/delete/' + orderId;
+            new bootstrap.Modal(document.getElementById('orderRemoveModal')).show();
+        });
+    });
+});
+</script>
+
+</body>
+</html>

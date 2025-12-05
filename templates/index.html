@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- 👋 GREETING WITH NICKNAME -->
+{% if nickname %}
+    <p style="font-weight:bold; font-size:18px;">Hello, {{ nickname }}!</p>
+{% endif %}
+
+<h2>Available Components</h2>
+
+<!-- 🔍 SEARCH + CATEGORY FILTER FORM -->
+<form method="GET" action="/" class="search-filter" style="margin-bottom: 20px;">
+    <input type="text" name="search" placeholder="Search components..."
+           value="{{ request.args.get('search', '') }}" class="search-box" style="padding: 8px; width: 250px;">
+
+    <select name="category" class="category-dropdown" style="padding: 8px;">
+        <option value="">All Categories</option>
+        <option value="Resistor" {% if request.args.get('category') == 'Resistor' %}selected{% endif %}>Resistors</option>
+        <option value="Capacitor" {% if request.args.get('category') == 'Capacitor' %}selected{% endif %}>Capacitors</option>
+        <option value="Diode" {% if request.args.get('category') == 'Diode' %}selected{% endif %}>Diodes</option>
+        <option value="Transistor" {% if request.args.get('category') == 'Transistor' %}selected{% endif %}>Transistors</option>
+        <option value="IC" {% if request.args.get('category') == 'IC' %}selected{% endif %}>IC Chips</option>
+        <option value="Power" {% if request.args.get('category') == 'Power' %}selected{% endif %}>Power Components</option>
+        <option value="Switch" {% if request.args.get('category') == 'Switch' %}selected{% endif %}>Switches & Buttons</option>
+        <option value="LED" {% if request.args.get('category') == 'LED' %}selected{% endif %}>LEDs</option>
+        <option value="Connector" {% if request.args.get('category') == 'Connector' %}selected{% endif %}>Wires & Connectors</option>
+        <option value="Module" {% if request.args.get('category') == 'Module' %}selected{% endif %}>Modules</option>
+        <option value="Microcontroller" {% if request.args.get('category') == 'Microcontroller' %}selected{% endif %}>Microcontrollers</option>
+    </select>
+
+    <button type="submit" class="search-btn" style="padding: 8px 12px; background-color: #ff69b4; border: none; color: white; border-radius: 5px;">Search</button>
+</form>
+
+<!-- ⭐ MAIN PRODUCT LISTING - FIXED LAYOUT -->
+<div class="products" style="display: flex; flex-wrap: wrap; gap: 20px;">
+    {% set displayed_categories = [] %}
+    {% for p in products %}
+        {% if p.category not in displayed_categories %}
+            <div class="product-card" style="border: 1px solid #ffd6eb; padding: 15px; border-radius: 15px; width: 220px; text-align: center; background-color: white; box-shadow: 0 2px 5px rgba(255, 105, 180, 0.2);">
+
+                <!-- 🔥 CATEGORY IMAGES -->
+                {% if p.category == 'Resistor' %}
+                    <img src="{{ url_for('static', filename='r1.png') }}" alt="Resistor" style="max-width: 100%; height: 120px; object-fit: contain; margin-bottom: 10px; border-radius: 10px;">
+                {% elif p.category == 'Capacitor' %}
+                    <img src="{{ url_for('static', filename='c1.png') }}" alt="Capacitor" style="max-width: 100%; height: 120px; object-fit: contain; margin-bottom: 10px; border-radius: 10px;">
+                {% elif p.category == 'Diode' %}
+                    <img src="{{ url_for('static', filename='d1.png') }}" alt="Diode" style="max-width: 100%; height: 120px; object-fit: contain; margin-bottom: 10px; border-radius: 10px;">
+                {% elif p.category == 'Transistor' %}
+                    <img src="{{ url_for('static', filename='t1.png') }}" alt="Transistor" style="max-width: 100%; height: 120px; object-fit: contain; margin-bottom: 10px; border-radius: 10px;">
+                {% elif p.category == 'IC' %}
+                    <img src="{{ url_for('static', filename='ic1.png') }}" alt="IC" style="max-width: 100%; height: 120px; object-fit: contain; margin-bottom: 10px; border-radius: 10px;">
+                {% elif p.category == 'Power' %}
+                    <img src="{{ url_for('static', filename='p1.png') }}" alt="Power" style="max-width: 100%; height: 120px; object-fit: contain; margin-bottom: 10px; border-radius: 10px;">
+                {% elif p.category == 'Switch' %}
+                    <img src="{{ url_for('static', filename='s1.png') }}" alt="Switch" style="max-width: 100%; height: 120px; object-fit: contain; margin-bottom: 10px; border-radius: 10px;">
+                {% elif p.category == 'LED' %}
+                    <img src="{{ url_for('static', filename='l1.png') }}" alt="LED" style="max-width: 100%; height: 120px; object-fit: contain; margin-bottom: 10px; border-radius: 10px;">
+                {% elif p.category == 'Connector' %}
+                    <img src="{{ url_for('static', filename='j1.png') }}" alt="Connector" style="max-width: 100%; height: 120px; object-fit: contain; margin-bottom: 10px; border-radius: 10px;">
+                {% elif p.category == 'Module' %}
+                    <img src="{{ url_for('static', filename='m1.png') }}" alt="Module" style="max-width: 100%; height: 120px; object-fit: contain; margin-bottom: 10px; border-radius: 10px;">
+                {% elif p.category == 'Microcontroller' %}
+                    <img src="{{ url_for('static', filename='MICRO1.png') }}" alt="Microcontroller" style="max-width: 100%; height: 120px; object-fit: contain; margin-bottom: 10px; border-radius: 10px;">
+                {% else %}
+                    <div style="width: 120px; height: 120px; background: linear-gradient(45deg, #ff69b4, #ffb6c1); border-radius: 10px; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px;">🛒</div>
+                {% endif %}
+
+                <!-- ✅ FIXED: Name only + View button -->
+                <h3 style="color: #ff3399; margin: 10px 0 15px 0; font-size: 1.1rem; word-break: break-word;">{{ p.category }}</h3>
+
+                <!-- 🎯 CRITICAL FIX: Links to PRODUCT PAGE with variants -->
+                <a href="{{ url_for('product_page', product_id=p.id) }}" class="btn" style="width: 100%; padding: 12px; background: linear-gradient(135deg, #ff69b4, #ff1493); color: white; text-decoration: none; border-radius: 12px; display: inline-block; font-weight: bold; box-shadow: 0 4px 15px rgba(255,105,180,0.4);">👀 View Products</a>
+            </div>
+            {% set _ = displayed_categories.append(p.category) %}
+        {% endif %}
+    {% endfor %}
+</div>
+
+{% endblock %}
